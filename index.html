@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ThermoLux · Temperature Converter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <!-- Floating Decorations -->
+  <div class="floaters" aria-hidden="true">
+    <span class="floater f1">🌡️</span>
+    <span class="floater f2">✨</span>
+    <span class="floater f3">🔥</span>
+    <span class="floater f4">❄️</span>
+    <span class="floater f5">☀️</span>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">🌡️</span>
+        <span class="brand-name">ThermoLux</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark/light mode">
+        <span class="toggle-icon" id="toggleIcon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <main class="main-layout">
+
+    <!-- LEFT COLUMN -->
+    <section class="left-col">
+
+      <!-- Converter Card -->
+      <div class="card converter-card">
+        <div class="card-header">
+          <h1 class="card-title">Temperature Converter</h1>
+          <p class="card-subtitle">Precise · Elegant · Instant</p>
+        </div>
+
+        <!-- Input -->
+        <div class="input-group">
+          <label class="input-label" for="tempInput">Enter Temperature</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🌡️</span>
+            <input
+              type="number"
+              id="tempInput"
+              class="temp-input"
+              placeholder="e.g. 25"
+              step="any"
+              aria-describedby="inputError"
+            />
+            <button class="reset-btn" id="resetBtn" title="Reset" aria-label="Reset input">✕</button>
+          </div>
+          <span class="error-msg" id="inputError" role="alert"></span>
+        </div>
+
+        <!-- From Unit -->
+        <div class="unit-section">
+          <label class="input-label">From</label>
+          <div class="unit-grid" id="fromUnits" role="radiogroup" aria-label="Source unit">
+            <label class="unit-pill active" data-group="from" data-val="C">
+              <input type="radio" name="fromUnit" value="C" checked hidden/>
+              <span class="pill-icon">🌡️</span> Celsius <span class="pill-sym">°C</span>
+            </label>
+            <label class="unit-pill" data-group="from" data-val="F">
+              <input type="radio" name="fromUnit" value="F" hidden/>
+              <span class="pill-icon">🔥</span> Fahrenheit <span class="pill-sym">°F</span>
+            </label>
+            <label class="unit-pill" data-group="from" data-val="K">
+              <input type="radio" name="fromUnit" value="K" hidden/>
+              <span class="pill-icon">❄️</span> Kelvin <span class="pill-sym">K</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Swap Arrow -->
+        <div class="swap-row">
+          <button class="swap-btn" id="swapBtn" title="Swap units" aria-label="Swap from and to units">
+            ⇅ Swap Units
+          </button>
+        </div>
+
+        <!-- To Unit -->
+        <div class="unit-section">
+          <label class="input-label">To</label>
+          <div class="unit-grid" id="toUnits" role="radiogroup" aria-label="Target unit">
+            <label class="unit-pill" data-group="to" data-val="C">
+              <input type="radio" name="toUnit" value="C" hidden/>
+              <span class="pill-icon">🌡️</span> Celsius <span class="pill-sym">°C</span>
+            </label>
+            <label class="unit-pill" data-group="to" data-val="F">
+              <input type="radio" name="toUnit" value="F" hidden/>
+              <span class="pill-icon">🔥</span> Fahrenheit <span class="pill-sym">°F</span>
+            </label>
+            <label class="unit-pill active" data-group="to" data-val="K">
+              <input type="radio" name="toUnit" value="K" checked hidden/>
+              <span class="pill-icon">❄️</span> Kelvin <span class="pill-sym">K</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Convert Button -->
+        <button class="convert-btn" id="convertBtn" aria-label="Convert temperature">
+          <span class="btn-label">Convert Temperature</span>
+          <span class="btn-loader" aria-hidden="true"></span>
+        </button>
+
+        <!-- Result -->
+        <div class="result-box" id="resultBox" aria-live="polite" hidden>
+          <div class="result-badge">✨ Result</div>
+          <div class="result-main">
+            <span class="result-original" id="resultOriginal"></span>
+            <span class="result-arrow">→</span>
+            <span class="result-converted" id="resultConverted"></span>
+          </div>
+          <div class="result-formula" id="resultFormula"></div>
+          <button class="copy-btn" id="copyBtn" title="Copy result" aria-label="Copy result to clipboard">
+            📋 Copy Result
+          </button>
+        </div>
+      </div>
+
+      <!-- Frequent Conversions -->
+      <div class="card freq-card">
+        <div class="card-header">
+          <h2 class="card-title small">⭐ Frequently Used</h2>
+        </div>
+        <div class="freq-list" id="freqList">
+          <p class="empty-msg">No conversions yet. Start converting!</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN -->
+    <section class="right-col">
+
+      <!-- Stats Dashboard -->
+      <div class="card stats-card">
+        <div class="card-header">
+          <h2 class="card-title small">📊 Statistics</h2>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-tile">
+            <span class="stat-icon">🔢</span>
+            <span class="stat-value" id="statTotal">0</span>
+            <span class="stat-label">Total Conversions</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-icon">📅</span>
+            <span class="stat-value" id="statToday">0</span>
+            <span class="stat-label">Today's Conversions</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-icon">🏆</span>
+            <span class="stat-value" id="statFavUnit">—</span>
+            <span class="stat-label">Most Used Unit</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-icon">🌡️</span>
+            <span class="stat-value" id="statLast">—</span>
+            <span class="stat-label">Last Converted</span>
+          </div>
+          <div class="stat-tile accent">
+            <span class="stat-icon">✅</span>
+            <span class="stat-value">100%</span>
+            <span class="stat-label">Accuracy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Panel -->
+      <div class="card history-card">
+        <div class="card-header history-header">
+          <h2 class="card-title small">📜 Conversion History</h2>
+          <button class="clear-btn" id="clearAllBtn" title="Clear all history" aria-label="Clear all history">
+            🗑 Clear All
+          </button>
+        </div>
+        <div class="history-list" id="historyList" aria-live="polite">
+          <p class="empty-msg">Your conversions will appear here.</p>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Made with ❤️ · ThermoLux © 2026</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
